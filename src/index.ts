@@ -1,4 +1,5 @@
 import * as cdk from 'aws-cdk-lib';
+import * as iam from 'aws-cdk-lib/aws-iam';
 import * as lambda from 'aws-cdk-lib/aws-lambda';
 import * as sns from 'aws-cdk-lib/aws-sns';
 import * as subscription from 'aws-cdk-lib/aws-sns-subscriptions';
@@ -49,6 +50,16 @@ export class LambdaErrorSnsSender extends Construct {
               ),
             }),
           },
+        })
+      );
+
+      snsTopic.grantPublish(snsErrorFunc);
+
+      //grand access to cloudwatch logs
+      snsErrorFunc.addToRolePolicy(
+        new iam.PolicyStatement({
+          actions: ['logs:FilterLogEvents'],
+          resources: ['*'],
         })
       );
     }

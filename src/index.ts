@@ -7,6 +7,7 @@ import { Construct } from 'constructs';
 
 export interface LambdaErrorSnsSenderProps extends cdk.StackProps {
   readonly snsTopics: sns.Topic[];
+  readonly maxNumberOfLogs?: number;
 }
 
 export class LambdaErrorSnsSender extends Construct {
@@ -21,6 +22,9 @@ export class LambdaErrorSnsSender extends Construct {
       handler: 'lambdaSnsError.handler',
       code: lambda.Code.fromAsset('dist/functions'),
       runtime: lambda.Runtime.NODEJS_18_X,
+      environment: {
+        MAX_NUMBER_OF_LOGS: props?.maxNumberOfLogs?.toString() ?? '100',
+      },
     });
 
     for (const snsTopic of props?.snsTopics) {

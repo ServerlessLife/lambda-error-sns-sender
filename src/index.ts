@@ -79,17 +79,11 @@ export class LambdaErrorSnsSender extends Construct {
 }
 
 function getAssetLocation(location: string) {
-  const loc = path.join(__dirname, '../lib/' + location);
+  const loc = path.join(__dirname, '../' + location);
 
   if (fs.existsSync(loc)) {
     return loc;
   }
 
-  const loc2 = path.join(__dirname, '../../lib/' + location);
-
-  if (fs.existsSync(loc2)) {
-    return loc2;
-  }
-
-  throw new Error(`Location ${loc} and ${loc2} does not exists.`);
+  throw new Error(`Location ${loc} does not exists.`);
 }

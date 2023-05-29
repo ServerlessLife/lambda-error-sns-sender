@@ -28,6 +28,7 @@ const project = new awscdk.AwsCdkConstructLibrary({
     '@aws-sdk/client-sns',
     'aws-lambda',
   ],
+  jest: false,
 });
 
 project.addTask('synth', {

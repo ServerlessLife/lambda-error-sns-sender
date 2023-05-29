@@ -29,10 +29,25 @@ const project = new awscdk.AwsCdkConstructLibrary({
     'aws-lambda',
   ],
   jest: false,
+  keywords: [
+    'aws',
+    'cdk',
+    'lambda',
+    'sns',
+    'error',
+    'cloudwatch',
+    'logs',
+    'serverless',
+    'alarm',
+    'monitoring',
+    'email',
+  ],
 });
 
-project.addTask('synth', {
-  exec: 'esbuild --bundle --platform=node --sourcemap functions/lambdaSnsError.ts --outdir=dist/functions/',
+const esbuilTask = project.addTask('esbuild', {
+  exec: 'esbuild --bundle --platform=node --sourcemap functions/lambdaSnsError.ts --outdir=lib/',
 });
+
+project.tasks.tryFind('post-compile')!.prependSpawn(esbuilTask);
 
 project.synth();

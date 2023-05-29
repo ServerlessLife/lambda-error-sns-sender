@@ -20,7 +20,7 @@ export class LambdaErrorSnsSender extends Construct {
 
     const snsErrorFunc = new lambda.Function(this, 'lambda-sns-error', {
       handler: 'lambdaSnsError.handler',
-      code: lambda.Code.fromAsset('dist/functions'),
+      code: lambda.Code.fromAsset('lib'),
       runtime: lambda.Runtime.NODEJS_18_X,
       environment: {
         MAX_NUMBER_OF_LOGS: props?.maxNumberOfLogs?.toString() ?? '100',

@@ -121,6 +121,14 @@
         }
       ]
     },
+    "esbuild": {
+      "name": "esbuild",
+      "steps": [
+        {
+          "exec": "esbuild --bundle --platform=node --sourcemap functions/lambdaSnsError.ts --outdir=lib/"
+        }
+      ]
+    },
     "eslint": {
       "name": "eslint",
       "description": "Runs eslint against the codebase",
@@ -180,6 +188,9 @@
       "description": "Runs after successful compilation",
       "steps": [
         {
+          "spawn": "esbuild"
+        },
+        {
           "spawn": "docgen"
         }
       ]
@@ -213,14 +224,6 @@
         },
         {
           "exec": "git diff --ignore-space-at-eol --exit-code"
-        }
-      ]
-    },
-    "synth": {
-      "name": "synth",
-      "steps": [
-        {
-          "exec": "esbuild --bundle --platform=node --sourcemap functions/lambdaSnsError.ts --outdir=dist/functions/"
         }
       ]
     },

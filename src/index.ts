@@ -1,8 +1,12 @@
+import * as fs from 'fs';
+import * as path from 'path';
 import * as cdk from 'aws-cdk-lib';
 import * as iam from 'aws-cdk-lib/aws-iam';
 import * as lambda from 'aws-cdk-lib/aws-lambda';
+import * as lambda_nodejs from 'aws-cdk-lib/aws-lambda-nodejs';
 import * as sns from 'aws-cdk-lib/aws-sns';
 import * as subscription from 'aws-cdk-lib/aws-sns-subscriptions';
+
 import { Construct } from 'constructs';
 
 export interface LambdaErrorSnsSenderProps extends cdk.StackProps {
@@ -18,14 +22,18 @@ export class LambdaErrorSnsSender extends Construct {
       throw new Error('No SNS Topics provided');
     }
 
-    const snsErrorFunc = new lambda.Function(this, 'lambda-sns-error', {
-      handler: 'lambdaSnsError.handler',
-      code: lambda.Code.fromAsset('lib'),
-      runtime: lambda.Runtime.NODEJS_18_X,
-      environment: {
-        MAX_NUMBER_OF_LOGS: props?.maxNumberOfLogs?.toString() ?? '100',
-      },
-    });
+    const snsErrorFunc = new lambda_nodejs.NodejsFunction(
+      this,
+      'lambda-sns-error',
+      {
+        handler: 'handler',
+        entry: getAssetLocation('lib/lambdaSnsError.js'),
+        runtime: lambda.Runtime.NODEJS_18_X,
+        environment: {
+          MAX_NUMBER_OF_LOGS: props?.maxNumberOfLogs?.toString() ?? '100',
+        },
+      }
+    );
 
     for (const snsTopic of props?.snsTopics) {
       snsTopic.addSubscription(
@@ -68,4 +76,20 @@ export class LambdaErrorSnsSender extends Construct {
       );
     }
   }
+}
+
+function getAssetLocation(location: string) {
+  const loc = path.join(__dirname, '../lib/' + location);
+
+  if (fs.existsSync(loc)) {
+    return loc;
+  }
+
+  const loc2 = path.join(__dirname, '../../lib/' + location);
+
+  if (fs.existsSync(loc2)) {
+    return loc2;
+  }
+
+  throw new Error(`Location ${loc} and ${loc2} does not exists.`);
 }

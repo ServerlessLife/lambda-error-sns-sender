@@ -22,17 +22,24 @@ export const handler = async (event: SNSEvent) => {
       r.Sns.Subject.startsWith('ALARM:')
     ).map((r) => JSON.parse(r.Sns.Message));
 
-    let metrics: { functionName: string; periodTotal: number }[] = messages
+    let metrics: {
+      functionName: string;
+      periodTotal: number;
+      topicArn: string;
+    }[] = messages
       .filter(
         (m) =>
           m.Trigger &&
           m.Trigger.Period &&
           m.Trigger.Dimensions?.length === 1 &&
           m.Trigger.Dimensions[0]?.name === 'FunctionName' &&
-          m.Trigger.Dimensions[0]?.value
+          m.Trigger.Dimensions[0]?.value &&
+          m.Sns &&
+          m.Sns.TopicArn
       )
       .map((m) => ({
         functionName: m.Trigger.Dimensions[0].value as string,
+        topicArn: m.Sns.TopicArn as string,
         periodTotal: (m.Trigger.Period * (m.Trigger.EvaluationPeriods ?? 1)) as
           | number,
       }));
@@ -90,8 +97,11 @@ export const handler = async (event: SNSEvent) => {
         Math.min(stringBuffer.length, maxLength)
       );
 
+      //get topicArn from metrics
+      metrics = metrics.filter((m) => m.functionName !== lambdaName);
+
       const input: PublishCommandInput = {
-        TopicArn: process.env.SNS_TOPIC_ARN,
+        TopicArn: event.Records[0].Sns.TopicArn,
         Message: stringBuffer.toString('utf-8'),
       };
 

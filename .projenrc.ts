@@ -45,7 +45,7 @@ const project = new awscdk.AwsCdkConstructLibrary({
 });
 
 const esbuilTask = project.addTask('esbuild', {
-  exec: 'esbuild --bundle --platform=node --sourcemap functions/lambdaSnsError.ts --outdir=lib/',
+  exec: 'esbuild --bundle --platform=node --sourcemap functions/lambdaSnsError.ts --outdir=lib/functions/',
 });
 
 project.tasks.tryFind('post-compile')!.prependSpawn(esbuilTask);

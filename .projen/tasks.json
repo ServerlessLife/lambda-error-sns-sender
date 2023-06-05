@@ -125,7 +125,7 @@
       "name": "esbuild",
       "steps": [
         {
-          "exec": "esbuild --bundle --platform=node --sourcemap functions/lambdaSnsError.ts --outdir=lib/"
+          "exec": "esbuild --bundle --platform=node --sourcemap functions/lambdaSnsError.ts --outdir=lib/functions/"
         }
       ]
     },

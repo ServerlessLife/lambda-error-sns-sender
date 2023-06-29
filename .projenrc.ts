@@ -11,6 +11,7 @@ const project = new awscdk.AwsCdkConstructLibrary({
   repositoryUrl:
     'https://github.com/ServerlessLife/lambda-error-sns-sender.git',
   eslint: true,
+
   packageManager: NodePackageManager.NPM,
   prettier: true,
   prettierOptions: {
@@ -43,6 +44,8 @@ const project = new awscdk.AwsCdkConstructLibrary({
     'email',
   ],
 });
+
+project.tsconfigDev.include.push('functions/**/*.ts');
 
 const esbuilTask = project.addTask('esbuild', {
   exec: 'esbuild --bundle --platform=node --sourcemap functions/lambdaSnsError.ts --outdir=lib/functions/',

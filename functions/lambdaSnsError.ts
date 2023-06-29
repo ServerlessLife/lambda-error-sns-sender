@@ -15,40 +15,52 @@ const maxNumberOfLogs = process.env.MAX_NUMBER_OF_LOGS
   ? parseInt(process.env.MAX_NUMBER_OF_LOGS)
   : 100;
 
-export const handler = async (event: SNSEvent) => {
+export const handler = async (event: SNSEvent, context: any) => {
+  console.log('EVENT', JSON.stringify(event));
+  console.log('CONTEXT', JSON.stringify(context));
+
   try {
     // only "ALARM" messages, not "OK"
-    const messages = event.Records.filter((r) =>
+    const records = event.Records.filter((r) =>
       r.Sns.Subject.startsWith('ALARM:')
-    ).map((r) => JSON.parse(r.Sns.Message));
+    ).map((r) => ({
+      message: JSON.parse(r.Sns.Message),
+      topicArn: r.Sns.TopicArn,
+    }));
+
+    console.log('MESSAGES', JSON.stringify(records));
 
     let metrics: {
       functionName: string;
       periodTotal: number;
       topicArn: string;
-    }[] = messages
+    }[] = records
       .filter(
         (m) =>
-          m.Trigger &&
-          m.Trigger.Period &&
-          m.Trigger.Dimensions?.length === 1 &&
-          m.Trigger.Dimensions[0]?.name === 'FunctionName' &&
-          m.Trigger.Dimensions[0]?.value &&
-          m.Sns &&
-          m.Sns.TopicArn
+          m.message.Trigger &&
+          m.message.Trigger.Period &&
+          m.message.Trigger.Dimensions?.length === 1 &&
+          m.message.Trigger.Dimensions[0]?.name === 'FunctionName' &&
+          m.message.Trigger.Dimensions[0]?.value &&
+          m.topicArn
       )
       .map((m) => ({
-        functionName: m.Trigger.Dimensions[0].value as string,
-        topicArn: m.Sns.TopicArn as string,
-        periodTotal: (m.Trigger.Period * (m.Trigger.EvaluationPeriods ?? 1)) as
-          | number,
+        functionName: m.message.Trigger.Dimensions[0].value as string,
+        topicArn: m.topicArn as string,
+        periodTotal: (m.message.Trigger.Period *
+          (m.message.Trigger.EvaluationPeriods ?? 1)) as number,
       }));
 
+    console.log('METRICS', JSON.stringify(metrics));
+
+    // remove duplicates
     const lambdaNames = [...new Set(metrics.map((m) => m.functionName))];
 
     if (lambdaNames.length === 0) {
       return;
     }
+
+    console.log('LAMBDA NAMES', lambdaNames);
 
     for (const lambdaName of lambdaNames) {
       const periodTotalMax = metrics
@@ -86,7 +98,7 @@ export const handler = async (event: SNSEvent) => {
         nextToken = cloudWatchCLogs.nextToken;
       } while (nextToken);
 
-      const joinedLogs = logs.join('\n');
+      const joinedLogs = `LAMBDA ${lambdaName} ERRORS:\n\n${logs.join('\n')}`;
       const batch = joinedLogs;
 
       let stringBuffer = Buffer.from(batch, 'utf-8');
@@ -98,12 +110,20 @@ export const handler = async (event: SNSEvent) => {
       );
 
       //get topicArn from metrics
-      metrics = metrics.filter((m) => m.functionName !== lambdaName);
+      const topicArn = metrics.find(
+        (m) => m.functionName === lambdaName
+      )?.topicArn;
+
+      if (!topicArn) {
+        throw new Error('TopicArn not found');
+      }
 
       const input: PublishCommandInput = {
-        TopicArn: event.Records[0].Sns.TopicArn,
+        TopicArn: topicArn,
         Message: stringBuffer.toString('utf-8'),
       };
+
+      console.log('PUBLISH', JSON.stringify(input));
 
       const command = new PublishCommand(input);
 

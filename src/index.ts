@@ -27,7 +27,7 @@ export class LambdaErrorSnsSender extends Construct {
       'lambda-sns-error',
       {
         handler: 'handler',
-        entry: getAssetLocation('lib/lambdaSnsError.js'),
+        entry: getAssetLocation('lib/functions/lambdaSnsError.js'),
         runtime: lambda.Runtime.NODEJS_18_X,
         environment: {
           MAX_NUMBER_OF_LOGS: props?.maxNumberOfLogs?.toString() ?? '100',

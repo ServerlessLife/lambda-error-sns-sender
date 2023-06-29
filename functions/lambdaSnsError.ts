@@ -15,20 +15,14 @@ const maxNumberOfLogs = process.env.MAX_NUMBER_OF_LOGS
   ? parseInt(process.env.MAX_NUMBER_OF_LOGS)
   : 100;
 
-export const handler = async (event: SNSEvent, context: any) => {
-  console.log('EVENT', JSON.stringify(event));
-  console.log('CONTEXT', JSON.stringify(context));
-
+export const handler = async (event: SNSEvent, context) => {
   try {
-    // only "ALARM" messages, not "OK"
     const records = event.Records.filter((r) =>
       r.Sns.Subject.startsWith('ALARM:')
     ).map((r) => ({
       message: JSON.parse(r.Sns.Message),
       topicArn: r.Sns.TopicArn,
     }));
-
-    console.log('MESSAGES', JSON.stringify(records));
 
     let metrics: {
       functionName: string;
@@ -47,29 +41,32 @@ export const handler = async (event: SNSEvent, context: any) => {
       .map((m) => ({
         functionName: m.message.Trigger.Dimensions[0].value as string,
         topicArn: m.topicArn as string,
-        periodTotal: (m.message.Trigger.Period *
+        periodTotal: ((m.message.Trigger.Period ?? 60) *
           (m.message.Trigger.EvaluationPeriods ?? 1)) as number,
       }));
 
-    console.log('METRICS', JSON.stringify(metrics));
-
     // remove duplicates
-    const lambdaNames = [...new Set(metrics.map((m) => m.functionName))];
+    const functionNames = [...new Set(metrics.map((m) => m.functionName))];
 
-    if (lambdaNames.length === 0) {
+    if (functionNames.length === 0) {
       return;
     }
 
-    console.log('LAMBDA NAMES', lambdaNames);
+    for (const functionName of functionNames) {
+      if (functionName === context.functionName) {
+        continue; //prevent recursion
+      }
 
-    for (const lambdaName of lambdaNames) {
       const periodTotalMax = metrics
-        .filter((m) => m.functionName === lambdaName)
+        .filter((m) => m.functionName === functionName)
         .reduce((acc, cur) => Math.max(acc, cur.periodTotal), 0);
 
-      const logGroupName = await getLogGroupName(lambdaName);
+      const logsFromDate = new Date(Date.now() - periodTotalMax * 1000);
+      console.log('logsFromDate', logsFromDate.toISOString());
 
-      //read all clodwatch logs streams
+      const logGroupName = await getLogGroupName(functionName);
+
+      //read CloudWatch logs
       const logs: string[] = [];
 
       let nextToken: string | undefined;
@@ -78,10 +75,9 @@ export const handler = async (event: SNSEvent, context: any) => {
         const filterLogCommand = new FilterLogEventsCommand({
           logGroupName: logGroupName,
           filterPattern: 'ERROR',
-          startTime: new Date(
-            Date.now() - periodTotalMax * 60 * 1000
-          ).getTime(),
+          startTime: logsFromDate.getTime(),
           nextToken,
+          limit: maxNumberOfLogs - logs.length,
         });
 
         const cloudWatchCLogs = await cloudWatchLogsClient.send(
@@ -91,17 +87,16 @@ export const handler = async (event: SNSEvent, context: any) => {
           ...(cloudWatchCLogs.events?.map((e) => `${e.message}`) ?? [])
         );
 
-        if (maxNumberOfLogs > 0 && logs.length > 100) {
+        if (logs.length >= maxNumberOfLogs) {
           break;
         }
 
         nextToken = cloudWatchCLogs.nextToken;
       } while (nextToken);
 
-      const joinedLogs = `LAMBDA ${lambdaName} ERRORS:\n\n${logs.join('\n')}`;
-      const batch = joinedLogs;
+      const joinedLogs = `LAMBDA ${functionName} ERRORS:\n\n${logs.join('\n')}`;
 
-      let stringBuffer = Buffer.from(batch, 'utf-8');
+      let stringBuffer = Buffer.from(joinedLogs, 'utf-8');
       const maxLength = 240000; // actual max is 262144;
       stringBuffer = Buffer.from(
         stringBuffer.buffer,
@@ -111,7 +106,7 @@ export const handler = async (event: SNSEvent, context: any) => {
 
       //get topicArn from metrics
       const topicArn = metrics.find(
-        (m) => m.functionName === lambdaName
+        (m) => m.functionName === functionName
       )?.topicArn;
 
       if (!topicArn) {
@@ -122,8 +117,6 @@ export const handler = async (event: SNSEvent, context: any) => {
         TopicArn: topicArn,
         Message: stringBuffer.toString('utf-8'),
       };
-
-      console.log('PUBLISH', JSON.stringify(input));
 
       const command = new PublishCommand(input);
 

@@ -27,7 +27,7 @@ export class LambdaErrorSnsSender extends Construct {
       handler: 'handler',
       code: lambda.Code.fromAsset(
         //getAssetLocation('lib/functions/lambdaSnsError')
-        path.join(__dirname, '../lib/functions/lambdaSnsError')
+        path.join(__dirname, '../lib/functions/lambdaSnsError/index.js')
       ),
       runtime: lambda.Runtime.NODEJS_18_X,
       environment: {

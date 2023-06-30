@@ -43,7 +43,7 @@ project.package.addField('workspaces', ['functions/*']);
 
 const esbuilTask = project.addTask('esbuild', {
   exec: `
-  esbuild --bundle --platform=node --format=esm functions/lambdaSnsError/index.ts --outdir=lib/functions/lambdaSnsError
+  esbuild --bundle --minify --target=esnext --platform=node --format=esm functions/lambdaSnsError/index.ts --outdir=lib/functions/lambdaSnsError
   cp functions/lambdaSnsError/package.json lib/functions/lambdaSnsError
   `,
 });

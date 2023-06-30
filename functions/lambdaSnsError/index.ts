@@ -7,7 +7,7 @@ import {
   PublishCommand,
   PublishCommandInput,
 } from '@aws-sdk/client-sns';
-import { SNSEvent } from 'aws-lambda';
+import { SNSEvent, Context } from 'aws-lambda';
 
 const cloudWatchLogsClient = new CloudWatchLogsClient({});
 const snsClient = new SNSClient({});
@@ -15,10 +15,10 @@ const maxNumberOfLogs = process.env.MAX_NUMBER_OF_LOGS
   ? parseInt(process.env.MAX_NUMBER_OF_LOGS)
   : 100;
 
-export const handler = async (event: SNSEvent, context) => {
+export const handler = async (event: SNSEvent, context: Context) => {
   try {
     const records = event.Records.filter((r) =>
-      r.Sns.Subject.startsWith('ALARM:')
+      r.Sns.Subject?.startsWith('ALARM:')
     ).map((r) => ({
       message: JSON.parse(r.Sns.Message),
       topicArn: r.Sns.TopicArn,

@@ -40,10 +40,11 @@ const project = new awscdk.AwsCdkConstructLibrary({
 
 project.tsconfigDev.include.push('functions/**/*.ts');
 project.package.addField('workspaces', ['functions/*']);
+project.gitignore.exclude('!functions/**/tsconfig.json');
 
 const esbuilTask = project.addTask('esbuild', {
   exec: `
-  esbuild --bundle --target=esnext --platform=node --format=esm functions/lambdaSnsError/index.ts --outfile=lib/functions/lambdaSnsError/index.mjs
+  esbuild --bundle --platform=node --format=esm functions/lambdaSnsError/index.ts --outfile=lib/functions/lambdaSnsError/index.mjs
   cp functions/lambdaSnsError/package.json lib/functions/lambdaSnsError
   `,
 });

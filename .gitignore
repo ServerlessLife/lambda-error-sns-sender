@@ -50,3 +50,4 @@ jspm_packages/
 .jsii
 tsconfig.json
 !/API.md
+!functions/**/tsconfig.json

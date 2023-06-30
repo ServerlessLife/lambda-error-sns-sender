@@ -91,6 +91,14 @@
         }
       ]
     },
+    "copy-package-json": {
+      "name": "copy-package-json",
+      "steps": [
+        {
+          "exec": "cp functions/lambdaSnsError/package.json lib/functions/lambdaSnsError"
+        }
+      ]
+    },
     "default": {
       "name": "default",
       "description": "Synthesize project files",
@@ -125,7 +133,7 @@
       "name": "esbuild",
       "steps": [
         {
-          "exec": "esbuild --bundle --platform=node --sourcemap functions/lambdaSnsError.ts --outdir=lib/functions/"
+          "exec": "esbuild --bundle --platform=node --sourcemap functions/lambdaSnsError/index.ts --outdir=lib/functions/lambdaSnsError"
         }
       ]
     },
@@ -187,6 +195,9 @@
       "name": "post-compile",
       "description": "Runs after successful compilation",
       "steps": [
+        {
+          "spawn": "copy-package-json"
+        },
         {
           "spawn": "esbuild"
         },

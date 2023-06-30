@@ -128,6 +128,7 @@ const lambdaErrorSnsSenderProps: LambdaErrorSnsSenderProps = { ... }
 | <code><a href="#lambda-error-sns-sender.LambdaErrorSnsSenderProps.property.tags">tags</a></code> | <code>{[ key: string ]: string}</code> | Stack tags that will be applied to all the taggable resources and the stack itself. |
 | <code><a href="#lambda-error-sns-sender.LambdaErrorSnsSenderProps.property.terminationProtection">terminationProtection</a></code> | <code>boolean</code> | Whether to enable termination protection for this stack. |
 | <code><a href="#lambda-error-sns-sender.LambdaErrorSnsSenderProps.property.snsTopics">snsTopics</a></code> | <code>aws-cdk-lib.aws_sns.Topic[]</code> | *No description.* |
+| <code><a href="#lambda-error-sns-sender.LambdaErrorSnsSenderProps.property.filter">filter</a></code> | <code>{[ key: string ]: aws-cdk-lib.aws_sns.FilterOrPolicy}</code> | *No description.* |
 | <code><a href="#lambda-error-sns-sender.LambdaErrorSnsSenderProps.property.maxNumberOfLogs">maxNumberOfLogs</a></code> | <code>number</code> | *No description.* |
 
 ---
@@ -332,6 +333,16 @@ public readonly snsTopics: Topic[];
 ```
 
 - *Type:* aws-cdk-lib.aws_sns.Topic[]
+
+---
+
+##### `filter`<sup>Optional</sup> <a name="filter" id="lambda-error-sns-sender.LambdaErrorSnsSenderProps.property.filter"></a>
+
+```typescript
+public readonly filter: {[ key: string ]: FilterOrPolicy};
+```
+
+- *Type:* {[ key: string ]: aws-cdk-lib.aws_sns.FilterOrPolicy}
 
 ---
 

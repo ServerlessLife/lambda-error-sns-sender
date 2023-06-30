@@ -24,10 +24,9 @@ export class LambdaErrorSnsSender extends Construct {
     }
 
     const snsErrorFunc = new lambda.Function(this, 'lambda-sns-error', {
-      handler: 'handler',
+      handler: 'index.handler',
       code: lambda.Code.fromAsset(
-        //getAssetLocation('lib/functions/lambdaSnsError')
-        path.join(__dirname, '../lib/functions/lambdaSnsError/index.js')
+        path.join(__dirname, '../lib/functions/lambdaSnsError')
       ),
       runtime: lambda.Runtime.NODEJS_18_X,
       environment: {
@@ -79,13 +78,3 @@ export class LambdaErrorSnsSender extends Construct {
     }
   }
 }
-
-// function getAssetLocation(location: string) {
-//   const loc = path.join(__dirname, '../' + location);
-
-//   if (fs.existsSync(loc)) {
-//     return loc;
-//   }
-
-//   throw new Error(`Location ${loc} does not exists.`);
-// }

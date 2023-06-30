@@ -42,15 +42,12 @@ project.tsconfigDev.include.push('functions/**/*.ts');
 project.package.addField('workspaces', ['functions/*']);
 
 const esbuilTask = project.addTask('esbuild', {
-  exec: 'esbuild --bundle --platform=node --sourcemap functions/lambdaSnsError/index.ts --outdir=lib/functions/lambdaSnsError',
+  exec: `
+  esbuild --bundle --platform=node --sourcemap functions/lambdaSnsError/index.ts --outdir=lib/functions/lambdaSnsError
+  cp functions/lambdaSnsError/package.json lib/functions/lambdaSnsError
+  `,
 });
 
 project.tasks.tryFind('post-compile')!.prependSpawn(esbuilTask);
-
-const copyPackageJsonTask = project.addTask('copy-package-json', {
-  exec: 'cp functions/lambdaSnsError/package.json lib/functions/lambdaSnsError',
-});
-
-project.tasks.tryFind('post-compile')!.prependSpawn(copyPackageJsonTask);
 
 project.synth();

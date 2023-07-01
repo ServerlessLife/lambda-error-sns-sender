@@ -125,7 +125,7 @@
       "name": "esbuild",
       "steps": [
         {
-          "exec": "\n  esbuild --bundle --platform=node --format=esm functions/lambdaSnsError/index.ts --outfile=lib/functions/lambdaSnsError/index.mjs\n  cp functions/lambdaSnsError/package.json lib/functions/lambdaSnsError\n  "
+          "exec": "\n  esbuild --bundle --minify --platform=node --external:@aws-sdk --format=esm functions/lambdaSnsError/index.ts --outfile=lib/functions/lambdaSnsError/index.mjs\n  cp functions/lambdaSnsError/package.json lib/functions/lambdaSnsError\n  "
         }
       ]
     },

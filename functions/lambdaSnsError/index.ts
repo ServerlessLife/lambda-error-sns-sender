@@ -70,8 +70,10 @@ export const handler = async (event: SNSEvent, context: Context) => {
       )!.timestamp;
 
       const logsFromDate = new Date(
-        timestamp.getTime() - (periodTotal + 10) * 1000
+        // 90 second safety margin
+        timestamp.getTime() - (periodTotal + 90) * 1000
       );
+
       const logGroupName = await getLogGroupName(functionName);
 
       //read CloudWatch logs

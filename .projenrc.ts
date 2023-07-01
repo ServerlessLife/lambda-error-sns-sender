@@ -39,13 +39,13 @@ const project = new awscdk.AwsCdkConstructLibrary({
 });
 
 project.tsconfigDev.include.push('functions/**/*.ts');
-project.package.addField('workspaces', ['functions/*']);
+project.package.addField('workspaces', ['functions']);
 project.gitignore.exclude('!functions/**/tsconfig.json');
 
 const esbuilTask = project.addTask('esbuild', {
   exec: `
   esbuild --bundle --minify --platform=node --external:@aws-sdk --format=esm functions/lambdaSnsError/index.ts --outfile=lib/functions/lambdaSnsError/index.mjs
-  cp functions/lambdaSnsError/package.json lib/functions/lambdaSnsError
+  cp functions/package.json lib/functions/lambdaSnsError
   `,
 });
 

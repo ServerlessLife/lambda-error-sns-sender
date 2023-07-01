@@ -44,7 +44,7 @@ project.gitignore.exclude('!functions/**/tsconfig.json');
 
 const esbuilTask = project.addTask('esbuild', {
   exec: `
-  esbuild --bundle --platform=node --format=esm functions/lambdaSnsError/index.ts --outfile=lib/functions/lambdaSnsError/index.mjs
+  esbuild --bundle --minify --platform=node --external:@aws-sdk --format=esm functions/lambdaSnsError/index.ts --outfile=lib/functions/lambdaSnsError/index.mjs
   cp functions/lambdaSnsError/package.json lib/functions/lambdaSnsError
   `,
 });

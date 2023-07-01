@@ -23,12 +23,14 @@ export const handler = async (event: SNSEvent, context: Context) => {
     ).map((r) => ({
       message: JSON.parse(r.Sns.Message),
       topicArn: r.Sns.TopicArn,
+      timestamp: new Date(r.Sns.Timestamp),
     }));
 
     let metrics: {
       functionName: string;
       periodTotal: number;
       topicArn: string;
+      timestamp: Date;
     }[] = records
       .filter(
         (m) =>
@@ -44,6 +46,7 @@ export const handler = async (event: SNSEvent, context: Context) => {
         topicArn: m.topicArn as string,
         periodTotal: ((m.message.Trigger.Period ?? 60) *
           (m.message.Trigger.EvaluationPeriods ?? 1)) as number,
+        timestamp: m.timestamp,
       }));
 
     // remove duplicates
@@ -58,13 +61,17 @@ export const handler = async (event: SNSEvent, context: Context) => {
         continue; //prevent recursion
       }
 
-      const periodTotalMax = metrics
-        .filter((m) => m.functionName === functionName)
-        .reduce((acc, cur) => Math.max(acc, cur.periodTotal), 0);
+      const periodTotal = metrics.find(
+        (m) => m.functionName === functionName
+      )!.periodTotal;
 
-      const logsFromDate = new Date(Date.now() - periodTotalMax * 1000);
-      console.log('logsFromDate', logsFromDate.toISOString());
+      const timestamp = metrics.find(
+        (m) => m.functionName === functionName
+      )!.timestamp;
 
+      const logsFromDate = new Date(
+        timestamp.getTime() - (periodTotal + 10) * 1000
+      );
       const logGroupName = await getLogGroupName(functionName);
 
       //read CloudWatch logs

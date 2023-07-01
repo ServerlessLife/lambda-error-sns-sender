@@ -32,6 +32,7 @@ export class LambdaErrorSnsSender extends Construct {
       environment: {
         MAX_NUMBER_OF_LOGS: props?.maxNumberOfLogs?.toString() ?? '100',
       },
+      timeout: cdk.Duration.minutes(1),
     });
 
     for (const snsTopic of props?.snsTopics) {

@@ -2,7 +2,6 @@
   "name": "scripts",
   "version": "1.0.0",
   "description": "",
-  "type": "module",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -11,6 +10,15 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.363.0"
+    "@aws-sdk/client-s3": "^3.363.0",
+    "@types/js-yaml": "^4.0.5",
+    "archiver": "^5.3.1",
+    "js-yaml": "^4.1.0",
+    "tmp": "^0.2.1",
+    "yaml": "^2.3.1"
+  },
+  "devDependencies": {
+    "@types/archiver": "^5.3.2",
+    "@types/tmp": "^0.2.3"
   }
 }

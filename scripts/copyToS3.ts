@@ -8,7 +8,7 @@ import YAML from 'yaml';
 
 const bucketName = 'lambda-error-sns-sender';
 const region = 'eu-west-1';
-const cloudFromationOutputYamlFileName = 'lambda-error-sns-sender5.yaml';
+const cloudFromationOutputYamlFileName = 'lambda-error-sns-sender.yaml';
 
 interface Assets {
   files: Record<

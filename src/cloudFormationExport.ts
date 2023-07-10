@@ -21,7 +21,7 @@ export class CloudFormationExportStack extends Stack {
     const conditionsDict: Record<string, cdk.CfnCondition> = {};
 
     for (let i = 1; i <= noOfParameters; i++) {
-      const snsTopicArn = new CfnParameter(this, `snsTopicArn${i}`, {
+      const snsTopicArnParam = new CfnParameter(this, `snsTopicArn${i}`, {
         type: 'String',
         description: 'SNS Topic ARN receive alarms and send Lambda errors to.',
       });
@@ -29,7 +29,7 @@ export class CloudFormationExportStack extends Stack {
       const snsTopic = sns.Topic.fromTopicArn(
         this,
         `snsTopic${i}`,
-        snsTopicArn.valueAsString
+        snsTopicArnParam.valueAsString
       );
       snsTopics.push(snsTopic as sns.Topic);
 
@@ -39,14 +39,20 @@ export class CloudFormationExportStack extends Stack {
         ),
       });
 
-      conditionsDict[snsTopicArn.valueAsString] = condition;
+      conditionsDict[snsTopicArnParam.valueAsString] = condition;
     }
+
+    const maxNumberOfLogsParam = new CfnParameter(this, `maxNumberOfLogs`, {
+      type: 'Number',
+      description: 'Max number of logs to send to SNS Topic.',
+    });
 
     const lambdaErrorSnsSender = new LambdaErrorSnsSender(
       this,
       'lambdaErrorSnsSender',
       {
         snsTopics: snsTopics,
+        maxNumberOfLogs: maxNumberOfLogsParam.valueAsNumber,
       }
     );
 

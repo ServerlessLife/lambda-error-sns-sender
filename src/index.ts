@@ -23,7 +23,7 @@ export class LambdaErrorSnsSender extends Construct {
       throw new Error('No SNS Topics provided');
     }
 
-    const snsErrorFunc = new lambda.Function(this, 'lambda-sns-error', {
+    const snsErrorFunc = new lambda.Function(this, 'lambdaSnsError', {
       handler: 'index.handler',
       code: lambda.Code.fromAsset(
         path.join(__dirname, '../lib/functions/lambdaSnsError')
@@ -35,6 +35,13 @@ export class LambdaErrorSnsSender extends Construct {
       timeout: cdk.Duration.minutes(1),
     });
 
+    //grand access to cloudwatch logs
+    snsErrorFunc.addToRolePolicy(
+      new iam.PolicyStatement({
+        actions: ['logs:FilterLogEvents'],
+        resources: ['*'], // I do not know which resources I will need to access
+      })
+    );
     for (const snsTopic of props?.snsTopics) {
       const defaultFilter = {
         MetricName: sns.FilterOrPolicy.filter(
@@ -68,14 +75,6 @@ export class LambdaErrorSnsSender extends Construct {
       );
 
       snsTopic.grantPublish(snsErrorFunc);
-
-      //grand access to cloudwatch logs
-      snsErrorFunc.addToRolePolicy(
-        new iam.PolicyStatement({
-          actions: ['logs:FilterLogEvents'],
-          resources: ['*'], // I do not know which resources I will need to access
-        })
-      );
     }
   }
 }

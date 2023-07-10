@@ -126,7 +126,7 @@ export const handler = async (event: SNSEvent, context: Context) => {
 
       const input: PublishCommandInput = {
         TopicArn: topicArn,
-        Subject: 'LAMBDA ${functionName} ERRORS',
+        Subject: `LAMBDA ${functionName} ERRORS`,
         Message: stringBuffer.toString('utf-8'),
       };
 

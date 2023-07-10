@@ -138,6 +138,14 @@
         }
       ]
     },
+    "export-cf": {
+      "name": "export-cf",
+      "steps": [
+        {
+          "exec": "\n  cdk synth\n  AWS_PROFILE=private esr scripts/copyToS3.ts\n  "
+        }
+      ]
+    },
     "install": {
       "name": "install",
       "description": "Install project dependencies and update lockfile (non-frozen)",

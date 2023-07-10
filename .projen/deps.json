@@ -30,6 +30,10 @@
       "type": "build"
     },
     {
+      "name": "esbuild-runner",
+      "type": "build"
+    },
+    {
       "name": "eslint-config-prettier",
       "type": "build"
     },

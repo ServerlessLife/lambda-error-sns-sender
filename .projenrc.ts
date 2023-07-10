@@ -19,10 +19,11 @@ const project = new awscdk.AwsCdkConstructLibrary({
       singleQuote: true,
     },
   },
-  deps: [] /* Runtime dependencies of this module. */,
+  deps: [],
   description: 'Send Lambda detail errors to AWS SNS Topic.',
-  devDeps: ['typescript', 'esbuild'] /* Build dependencies for this module. */,
+  devDeps: ['typescript', 'esbuild', 'esbuild-runner'],
   jest: false,
+  gitignore: ['/cdk.out/'],
   keywords: [
     'aws',
     'cdk',
@@ -38,9 +39,15 @@ const project = new awscdk.AwsCdkConstructLibrary({
   ],
 });
 
-project.tsconfigDev.include.push('functions/**/*.ts');
-project.package.addField('workspaces', ['functions']);
+project.tsconfigDev.include.push('functions/**/*.ts', 'scripts/**/*.ts');
+project.package.addField('workspaces', ['functions', 'scripts']);
 project.gitignore.exclude('!functions/**/tsconfig.json');
+project.addTask('export-cf', {
+  exec: `
+  cdk synth
+  AWS_PROFILE=private esr scripts/copyToS3.ts
+  `,
+});
 
 const esbuilTask = project.addTask('esbuild', {
   exec: `

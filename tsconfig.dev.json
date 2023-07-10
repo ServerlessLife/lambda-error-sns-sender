@@ -30,6 +30,7 @@
     "src/**/*.ts",
     "test/**/*.ts",
     "functions/**/*.ts",
+    "scripts/**/*.ts",
     ".projenrc.ts",
     "projenrc/**/*.ts"
   ],

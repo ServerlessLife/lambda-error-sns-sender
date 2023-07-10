@@ -44,7 +44,7 @@ project.package.addField('workspaces', ['functions', 'scripts']);
 project.gitignore.exclude('!functions/**/tsconfig.json');
 project.addTask('export-cf', {
   exec: `
-  cdk synth
+  cdk synth --quiet
   AWS_PROFILE=private esr scripts/copyToS3.ts
   `,
 });

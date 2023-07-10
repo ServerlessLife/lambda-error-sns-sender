@@ -142,7 +142,7 @@
       "name": "export-cf",
       "steps": [
         {
-          "exec": "\n  cdk synth\n  AWS_PROFILE=private esr scripts/copyToS3.ts\n  "
+          "exec": "\n  cdk synth --quiet\n  AWS_PROFILE=private esr scripts/copyToS3.ts\n  "
         }
       ]
     },

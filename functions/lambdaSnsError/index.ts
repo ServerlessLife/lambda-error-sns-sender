@@ -104,7 +104,8 @@ export const handler = async (event: SNSEvent, context: Context) => {
         nextToken = cloudWatchCLogs.nextToken;
       } while (nextToken);
 
-      const joinedLogs = `LAMBDA ${functionName} ERRORS:\n\n${logs.join('\n')}`;
+      //const joinedLogs = `LAMBDA ${functionName} ERRORS:\n\n${logs.join('\n')}`;
+      const joinedLogs = logs.join('\n');
 
       let stringBuffer = Buffer.from(joinedLogs, 'utf-8');
       const maxLength = 240000; // actual max is 262144;
@@ -125,6 +126,7 @@ export const handler = async (event: SNSEvent, context: Context) => {
 
       const input: PublishCommandInput = {
         TopicArn: topicArn,
+        Subject: 'LAMBDA ${functionName} ERRORS',
         Message: stringBuffer.toString('utf-8'),
       };
 

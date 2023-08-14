@@ -110,7 +110,7 @@ project.addTask('export-cf', {
     },
     {
       name: 'Generate files with projen',
-      run: 'npx projen',
+      run: 'npx projen compile',
     },
     {
       name: 'Configure AWS credentials',

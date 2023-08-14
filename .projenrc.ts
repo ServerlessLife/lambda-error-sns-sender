@@ -41,6 +41,10 @@ const project = new awscdk.AwsCdkConstructLibrary({
     distName: 'lambda-error-sns-sender',
     module: 'lambda-error-sns-sender',
   },
+  publishToNuget: {
+    packageId: 'ServerlessLife.LambdaErrorSnsSender',
+    dotNetNamespace: 'ServerlessLife.LambdaErrorSnsSender',
+  },
 });
 
 project.tsconfigDev.include.push('functions/**/*.ts', 'scripts/**/*.ts');

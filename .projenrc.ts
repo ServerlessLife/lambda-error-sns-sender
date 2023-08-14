@@ -1,4 +1,5 @@
 import { awscdk } from 'projen';
+import { TaskWorkflow } from 'projen/lib/github';
 import { NodePackageManager } from 'projen/lib/javascript';
 const project = new awscdk.AwsCdkConstructLibrary({
   author: 'Marko (ServerlessLife)',
@@ -59,12 +60,6 @@ const project = new awscdk.AwsCdkConstructLibrary({
 project.tsconfigDev.include.push('functions/**/*.ts', 'scripts/**/*.ts');
 project.package.addField('workspaces', ['functions', 'scripts']);
 project.gitignore.exclude('!functions/**/tsconfig.json');
-project.addTask('export-cf', {
-  exec: `
-  cdk synth --quiet
-  AWS_PROFILE=private esr scripts/copyToS3.ts
-  `,
-});
 
 const esbuilTask = project.addTask('esbuild', {
   exec: `
@@ -74,5 +69,47 @@ const esbuilTask = project.addTask('esbuild', {
 });
 
 project.tasks.tryFind('post-compile')!.prependSpawn(esbuilTask);
+
+// export raw CloudFormation for independent use (see part 3 of the article)
+project.addTask('export-cf', {
+  steps: [
+    {},
+    {
+      exec: `
+        npx cdk synth lambda-error-sns-sender-cf --quiet
+        npx esr scripts/copyToS3.ts
+  `,
+    },
+  ],
+});
+
+(
+  project.github?.workflows.find((x) => x.name === 'release') as TaskWorkflow
+).addJob('release_raw_cloudformation', {
+  name: 'Release raw CloudFormation',
+  needs: ['release'],
+  runsOn: ['ubuntu-latest'],
+  permissions: {},
+  steps: [
+    {
+      name: 'Checkout',
+      uses: 'actions/checkout@v3',
+    },
+    {
+      name: 'Configure AWS credentials',
+      uses: 'aws-actions/configure-aws-credentials@v2',
+      with: {
+        'aws-access-key-id': '${{ secrets.AWS_ACCESS_KEY_ID }}',
+        'aws-secret-access-key': '${{ secrets.AWS_SECRET_ACCESS_KEY }}',
+        'aws-region': 'eu-west-1',
+      },
+    },
+    {
+      name: 'Export CF',
+      run: 'npx projen export-cf',
+    },
+  ],
+}),
+  console.log();
 
 project.synth();

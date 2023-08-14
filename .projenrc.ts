@@ -38,7 +38,7 @@ const project = new awscdk.AwsCdkConstructLibrary({
     'email',
   ],
   publishToPypi: {
-    distName: 'CDK construct to send Lambda detail errors to AWS SNS Topic.',
+    distName: 'lambda-error-sns-sender',
     module: 'lambda-error-sns-sender',
   },
 });

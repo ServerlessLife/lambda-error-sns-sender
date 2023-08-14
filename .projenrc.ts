@@ -96,6 +96,9 @@ project.addTask('export-cf', {
     {
       name: 'Checkout',
       uses: 'actions/checkout@v3',
+      with: {
+        'fetch-depth': 0,
+      },
     },
     {
       name: 'Setup Node.js',
@@ -110,7 +113,7 @@ project.addTask('export-cf', {
     },
     {
       name: 'Build',
-      run: 'npx projen buil',
+      run: 'npx projen build',
     },
     {
       name: 'Configure AWS credentials',

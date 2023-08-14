@@ -1,6 +1,6 @@
 {
   "name": "lambda-error-sns-sender",
-  "description": "Send Lambda detail errors to AWS SNS Topic.",
+  "description": "CDK construct to send Lambda detail errors to AWS SNS Topic.",
   "repository": {
     "type": "git",
     "url": "https://github.com/ServerlessLife/lambda-error-sns-sender.git"
@@ -20,6 +20,7 @@
     "package": "npx projen package",
     "package-all": "npx projen package-all",
     "package:js": "npx projen package:js",
+    "package:python": "npx projen package:python",
     "post-compile": "npx projen post-compile",
     "post-upgrade": "npx projen post-upgrade",
     "pre-compile": "npx projen pre-compile",
@@ -84,7 +85,12 @@
   "stability": "stable",
   "jsii": {
     "outdir": "dist",
-    "targets": {},
+    "targets": {
+      "python": {
+        "distName": "CDK construct to send Lambda detail errors to AWS SNS Topic.",
+        "module": "lambda-error-sns-sender"
+      }
+    },
     "tsc": {
       "outDir": "lib",
       "rootDir": "src"

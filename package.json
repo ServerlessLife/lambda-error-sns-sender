@@ -94,7 +94,7 @@
         "package": "io.github.serverlesslife.LambdaErrorSnsSender",
         "maven": {
           "groupId": "io.github.serverlesslife",
-          "artifactId": "LambdaErrorSnsSender`"
+          "artifactId": "LambdaErrorSnsSender"
         }
       },
       "python": {

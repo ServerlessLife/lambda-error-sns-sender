@@ -48,7 +48,7 @@ const project = new awscdk.AwsCdkConstructLibrary({
   publishToMaven: {
     mavenGroupId: 'io.github.serverlesslife',
     javaPackage: 'io.github.serverlesslife.LambdaErrorSnsSender',
-    mavenArtifactId: 'LambdaErrorSnsSender`',
+    mavenArtifactId: 'LambdaErrorSnsSender',
     mavenEndpoint: 'https://s01.oss.sonatype.org',
   },
   publishToGo: {

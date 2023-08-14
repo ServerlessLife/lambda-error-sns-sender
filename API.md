@@ -1,4 +1,4 @@
-# Lambda Eerror SNS Sender
+# Lambda Error SNS Sender
 
 ## A simple solution to improve the CloudWatch alarm to receive Lambda error details by email. Available as CDK construct or as CloudFormation.
 
@@ -132,6 +132,7 @@ const lambdaErrorSnsSenderProps: LambdaErrorSnsSenderProps = { ... }
 | <code><a href="#lambda-error-sns-sender.LambdaErrorSnsSenderProps.property.env">env</a></code> | <code>aws-cdk-lib.Environment</code> | The AWS environment (account/region) where this stack will be deployed. |
 | <code><a href="#lambda-error-sns-sender.LambdaErrorSnsSenderProps.property.permissionsBoundary">permissionsBoundary</a></code> | <code>aws-cdk-lib.PermissionsBoundary</code> | Options for applying a permissions boundary to all IAM Roles and Users created within this Stage. |
 | <code><a href="#lambda-error-sns-sender.LambdaErrorSnsSenderProps.property.stackName">stackName</a></code> | <code>string</code> | Name to deploy the stack with. |
+| <code><a href="#lambda-error-sns-sender.LambdaErrorSnsSenderProps.property.suppressTemplateIndentation">suppressTemplateIndentation</a></code> | <code>boolean</code> | Enable this flag to suppress indentation in generated CloudFormation templates. |
 | <code><a href="#lambda-error-sns-sender.LambdaErrorSnsSenderProps.property.synthesizer">synthesizer</a></code> | <code>aws-cdk-lib.IStackSynthesizer</code> | Synthesis method to use while deploying this stack. |
 | <code><a href="#lambda-error-sns-sender.LambdaErrorSnsSenderProps.property.tags">tags</a></code> | <code>{[ key: string ]: string}</code> | Stack tags that will be applied to all the taggable resources and the stack itself. |
 | <code><a href="#lambda-error-sns-sender.LambdaErrorSnsSenderProps.property.terminationProtection">terminationProtection</a></code> | <code>boolean</code> | Whether to enable termination protection for this stack. |
@@ -282,6 +283,23 @@ public readonly stackName: string;
 - *Default:* Derived from construct path.
 
 Name to deploy the stack with.
+
+---
+
+##### `suppressTemplateIndentation`<sup>Optional</sup> <a name="suppressTemplateIndentation" id="lambda-error-sns-sender.LambdaErrorSnsSenderProps.property.suppressTemplateIndentation"></a>
+
+```typescript
+public readonly suppressTemplateIndentation: boolean;
+```
+
+- *Type:* boolean
+- *Default:* the value of `@aws-cdk/core:suppressTemplateIndentation`, or `false` if that is not set.
+
+Enable this flag to suppress indentation in generated CloudFormation templates.
+
+If not specified, the value of the `@aws-cdk/core:suppressTemplateIndentation`
+context key will be used. If that is not specified, then the
+default value `false` will be used.
 
 ---
 

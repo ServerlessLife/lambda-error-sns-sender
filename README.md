@@ -1,4 +1,4 @@
-# Lambda Eerror SNS Sender
+# Lambda Error SNS Sender
 
 ## A simple solution to improve the CloudWatch alarm to receive Lambda error details by email. Available as CDK construct or as CloudFormation.
 

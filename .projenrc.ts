@@ -20,7 +20,7 @@ const project = new awscdk.AwsCdkConstructLibrary({
     },
   },
   deps: [],
-  description: 'Send Lambda detail errors to AWS SNS Topic.',
+  description: 'CDK construct to send Lambda detail errors to AWS SNS Topic.',
   devDeps: ['typescript', 'esbuild', 'esbuild-runner'],
   jest: false,
   gitignore: ['/cdk.out/'],
@@ -37,6 +37,10 @@ const project = new awscdk.AwsCdkConstructLibrary({
     'monitoring',
     'email',
   ],
+  publishToPypi: {
+    distName: 'CDK construct to send Lambda detail errors to AWS SNS Topic.',
+    module: 'lambda-error-sns-sender',
+  },
 });
 
 project.tsconfigDev.include.push('functions/**/*.ts', 'scripts/**/*.ts');

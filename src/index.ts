@@ -26,7 +26,7 @@ export class LambdaErrorSnsSender extends Construct {
     const snsErrorFunc = new lambda.Function(this, 'lambdaSnsError', {
       handler: 'index.handler',
       code: lambda.Code.fromAsset(
-        path.join(__dirname, '../lib/functions/lambdaSnsError')
+        path.join(__dirname, '../lib/functions/lambdaSnsError'),
       ),
       runtime: lambda.Runtime.NODEJS_18_X,
       environment: {
@@ -40,29 +40,29 @@ export class LambdaErrorSnsSender extends Construct {
       new iam.PolicyStatement({
         actions: ['logs:FilterLogEvents'],
         resources: ['*'], // I do not know which resources I will need to access
-      })
+      }),
     );
     for (const snsTopic of props?.snsTopics) {
       const defaultFilter = {
         MetricName: sns.FilterOrPolicy.filter(
           sns.SubscriptionFilter.stringFilter({
             allowlist: ['Errors'],
-          })
+          }),
         ),
         Namespace: sns.FilterOrPolicy.filter(
           sns.SubscriptionFilter.stringFilter({
             allowlist: ['AWS/Lambda'],
-          })
+          }),
         ),
         StatisticType: sns.FilterOrPolicy.filter(
           sns.SubscriptionFilter.stringFilter({
             allowlist: ['Statistic'],
-          })
+          }),
         ),
         Statistic: sns.FilterOrPolicy.filter(
           sns.SubscriptionFilter.stringFilter({
             allowlist: ['SUM'],
-          })
+          }),
         ),
       };
 
@@ -71,7 +71,7 @@ export class LambdaErrorSnsSender extends Construct {
           filterPolicyWithMessageBody: {
             Trigger: sns.FilterOrPolicy.policy(props.filter ?? defaultFilter),
           },
-        })
+        }),
       );
 
       snsTopic.grantPublish(snsErrorFunc);

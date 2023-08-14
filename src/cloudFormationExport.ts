@@ -29,13 +29,13 @@ export class CloudFormationExportStack extends Stack {
       const snsTopic = sns.Topic.fromTopicArn(
         this,
         `snsTopic${i}`,
-        snsTopicArnParam.valueAsString
+        snsTopicArnParam.valueAsString,
       );
       snsTopics.push(snsTopic as sns.Topic);
 
       const condition = new cdk.CfnCondition(this, `conditionSnsTopic${i}`, {
         expression: cdk.Fn.conditionNot(
-          cdk.Fn.conditionEquals('', snsTopic.topicArn)
+          cdk.Fn.conditionEquals('', snsTopic.topicArn),
         ),
       });
 
@@ -53,7 +53,7 @@ export class CloudFormationExportStack extends Stack {
       {
         snsTopics: snsTopics,
         maxNumberOfLogs: maxNumberOfLogsParam.valueAsNumber,
-      }
+      },
     );
 
     const subscriptions = lambdaErrorSnsSender.node
@@ -68,7 +68,7 @@ export class CloudFormationExportStack extends Stack {
     }
 
     const snsErrorFunc = lambdaErrorSnsSender.node.findChild(
-      'lambdaSnsError'
+      'lambdaSnsError',
     ) as lambda.Function;
 
     // const lambdaPermissions = snsErrorFunc.node

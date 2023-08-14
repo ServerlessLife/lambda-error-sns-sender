@@ -87,7 +87,7 @@ project.addTask('export-cf', {
 (
   project.github?.workflows.find((x) => x.name === 'release') as TaskWorkflow
 ).addJob('release_raw_cloudformation', {
-  name: 'Release raw CloudFormation',
+  name: 'Publish raw CloudFormation',
   needs: ['release'],
   runsOn: ['ubuntu-latest'],
   permissions: {},

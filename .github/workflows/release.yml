@@ -46,7 +46,7 @@ jobs:
           name: build-artifact
           path: dist
   release_raw_cloudformation:
-    name: Release raw CloudFormation
+    name: Publish raw CloudFormation
     needs: release
     runs-on: ubuntu-latest
     permissions: {}

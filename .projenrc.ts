@@ -1,6 +1,7 @@
 import { awscdk } from 'projen';
 import { TaskWorkflow } from 'projen/lib/github';
 import { NodePackageManager } from 'projen/lib/javascript';
+
 const project = new awscdk.AwsCdkConstructLibrary({
   author: 'Marko (ServerlessLife)',
   authorAddress: 'marko@serverlesslife.com',
@@ -103,6 +104,13 @@ project.addTask('export-cf', {
         'aws-access-key-id': '${{ secrets.AWS_ACCESS_KEY_ID }}',
         'aws-secret-access-key': '${{ secrets.AWS_SECRET_ACCESS_KEY }}',
         'aws-region': 'eu-west-1',
+      },
+    },
+    {
+      name: 'Setup Node.js',
+      uses: 'actions/setup-node@v3',
+      with: {
+        'node-version': '16.x',
       },
     },
     {

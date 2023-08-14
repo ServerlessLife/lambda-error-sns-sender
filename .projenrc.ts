@@ -45,6 +45,12 @@ const project = new awscdk.AwsCdkConstructLibrary({
     packageId: 'ServerlessLife.LambdaErrorSnsSender',
     dotNetNamespace: 'ServerlessLife.LambdaErrorSnsSender',
   },
+  publishToMaven: {
+    mavenGroupId: 'io.github.serverlesslife',
+    javaPackage: 'io.github.serverlesslife.LambdaErrorSnsSender',
+    mavenArtifactId: 'LambdaErrorSnsSender`',
+    mavenEndpoint: 'https://s01.oss.sonatype.org',
+  },
 });
 
 project.tsconfigDev.include.push('functions/**/*.ts', 'scripts/**/*.ts');

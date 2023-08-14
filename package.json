@@ -20,6 +20,7 @@
     "package": "npx projen package",
     "package-all": "npx projen package-all",
     "package:dotnet": "npx projen package:dotnet",
+    "package:java": "npx projen package:java",
     "package:js": "npx projen package:js",
     "package:python": "npx projen package:python",
     "post-compile": "npx projen post-compile",
@@ -88,6 +89,13 @@
   "jsii": {
     "outdir": "dist",
     "targets": {
+      "java": {
+        "package": "io.github.serverlesslife.LambdaErrorSnsSender",
+        "maven": {
+          "groupId": "io.github.serverlesslife",
+          "artifactId": "LambdaErrorSnsSender`"
+        }
+      },
       "python": {
         "distName": "lambda-error-sns-sender",
         "module": "lambda-error-sns-sender"

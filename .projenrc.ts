@@ -98,15 +98,6 @@ project.addTask('export-cf', {
       uses: 'actions/checkout@v3',
     },
     {
-      name: 'Configure AWS credentials',
-      uses: 'aws-actions/configure-aws-credentials@v2',
-      with: {
-        'aws-access-key-id': '${{ secrets.AWS_ACCESS_KEY_ID }}',
-        'aws-secret-access-key': '${{ secrets.AWS_SECRET_ACCESS_KEY }}',
-        'aws-region': 'eu-west-1',
-      },
-    },
-    {
       name: 'Setup Node.js',
       uses: 'actions/setup-node@v3',
       with: {
@@ -114,8 +105,21 @@ project.addTask('export-cf', {
       },
     },
     {
+      name: 'Install dependencies',
+      run: 'npm ci',
+    },
+    {
       name: 'Generate files with projen',
       run: 'npx projen',
+    },
+    {
+      name: 'Configure AWS credentials',
+      uses: 'aws-actions/configure-aws-credentials@v2',
+      with: {
+        'aws-access-key-id': '${{ secrets.AWS_ACCESS_KEY_ID }}',
+        'aws-secret-access-key': '${{ secrets.AWS_SECRET_ACCESS_KEY }}',
+        'aws-region': 'eu-west-1',
+      },
     },
     {
       name: 'Export CF',

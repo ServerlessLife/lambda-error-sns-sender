@@ -1,6 +1,5 @@
 import * as fs from 'fs';
 import * as path from 'path';
-import * as stream from 'stream';
 import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
 import * as archiver from 'archiver';
 import * as tmp from 'tmp';
@@ -33,7 +32,7 @@ const s3Client = new S3Client({ region });
 async function run() {
   const jsonFile = fs.readFileSync(
     'cdk.out/lambda-error-sns-sender-cf.assets.json',
-    'utf-8'
+    'utf-8',
   );
   const assets: Assets = JSON.parse(jsonFile);
   const assetsFiles: string[] = [];
@@ -66,14 +65,14 @@ async function run() {
   await convertToYamlAndUploadZipToS3(
     cloudFromationTemplateFile,
     cloudFromationOutputYamlFileName,
-    assetsFiles
+    assetsFiles,
   );
 }
 
 async function convertToYamlAndUploadZipToS3(
   fullPath: string,
   objectKey: string,
-  assetsFiles: string[]
+  assetsFiles: string[],
 ) {
   console.log(`Converting to yaml and uploading ${fullPath} to ${objectKey}`);
 
@@ -83,15 +82,13 @@ async function convertToYamlAndUploadZipToS3(
 
   for (const key in json.Resources) {
     const resource = json.Resources[key];
-    //console.log(`** Resource ${key} is ${JSON.stringify(resource)}`);
     const s3Key = resource.Properties?.Code?.S3Key;
-    //console.log(`Checking ${key} for ${s3Key}`);
 
     if (s3Key && assetsFiles.includes(s3Key)) {
       console.log(
         `Replacing ${JSON.stringify(
-          json.Resources[key].Properties.Code.S3Bucket
-        )} with ${bucketName} for resource ${s3Key}`
+          json.Resources[key].Properties.Code.S3Bucket,
+        )} with ${bucketName} for resource ${s3Key}`,
       );
       json.Resources[key].Properties.Code.S3Bucket = bucketName;
     }
@@ -148,7 +145,7 @@ async function uploadToS3(body: fs.ReadStream | string, objectKey: string) {
 
 async function zipFolder(
   sourceFolder: string,
-  zipFilePath: string
+  zipFilePath: string,
 ): Promise<void> {
   const output = fs.createWriteStream(zipFilePath);
   const archive = archiver.create('zip', {

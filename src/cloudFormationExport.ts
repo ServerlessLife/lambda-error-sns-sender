@@ -67,17 +67,9 @@ export class CloudFormationExportStack extends Stack {
       }
     }
 
-    const snsErrorFunc = lambdaErrorSnsSender.node.findChild(
+    const snsErrorFunc = this.node.findChild(
       'lambdaSnsError',
     ) as lambda.Function;
-
-    // const lambdaPermissions = snsErrorFunc.node
-    //   .findAll()
-    //   .filter(
-    //     (s) => s instanceof lambda.CfnPermission
-    //   ) as lambda.CfnPermission[];
-
-    //for (const lambdaPermission of lambdaPermissions) {
 
     for (const lambdaPermission of snsErrorFunc.permissionsNode.children) {
       if (lambdaPermission instanceof lambda.CfnPermission) {
@@ -123,45 +115,13 @@ export class CloudFormationExportStack extends Stack {
       } else {
         newPolicyStatements.push(statement.toJSON());
       }
-
-      // console.log('statement.resources', statement.resources);
-      // if (statement && statement.condition.stringEquals) {
-      //   const condition = statement.condition.stringEquals;
-      //   if (
-      //     condition['aws:SourceArn'] &&
-      //     conditionsDict[condition['aws:SourceArn']]
-      //   ) {
-      //     statement.condition = conditionsDict[condition['aws:SourceArn']];
-      //   }
-      // }
     }
-
-    // set logical id to override the default logical id of snsErrorFunc
-    // (snsErrorFunc.node.defaultChild as lambda.CfnFunction).overrideLogicalId(
-    //   'lambda-sns-error'
-    // );
-
-    //console.log(snsErrorFunc.permissionsNode.children);
-
-    setNodeNames(this.node.children);
-    //let i = 0;
-    //for (const construct of snsErrorFunc.node.children) {
-    // for (const construct of snsErrorFunc.permissionsNode.children) {
-    //   if (construct instanceof lambda.CfnPermission) {
-    //     construct.overrideLogicalId(`${snsErrorFunc.node.id}${i}`);
-    //     i++;
-    //   }
-    // }
 
     lambdaPolicy.policyDocument = {
       Statement: newPolicyStatements,
     };
 
-    // const l = lambdaErrorSnsSender.node.findChild('lambda-sns-error');
-    // console.log(l);
-    // (l.node.defaultChild as lambda.CfnFunction).overrideLogicalId(
-    //   'lambda-sns-error'
-    // );
+    setNodeNames(this.node.children);
   }
 }
 
@@ -178,22 +138,9 @@ app.synth();
 function setNodeNames(constructs: IConstruct[], parentName?: string) {
   let i = 0;
   for (const construct of constructs) {
-    //console.log(construct.node.id);
     let newParentName = parentName;
 
-    // console.log('  construct instanceof Node = ' + (construct instanceof Node));
-
-    // if (construct instanceof Node) {
-    //   console.log(
-    //     '  construct.defaultChild instanceof cdk.CfnElement = ' +
-    //       (construct.defaultChild instanceof cdk.CfnElement)
-    //   );
-    // }
-
-    if (
-      //construct instanceof Node &&
-      construct.node.defaultChild instanceof cdk.CfnElement
-    ) {
+    if (construct.node.defaultChild instanceof cdk.CfnElement) {
       newParentName = parentName
         ? `${parentName}${construct.node.id}`
         : construct.node.id;

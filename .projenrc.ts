@@ -5,7 +5,7 @@ const project = new awscdk.AwsCdkConstructLibrary({
   authorAddress: 'marko@serverlesslife.com',
   cdkVersion: '2.70.0',
   defaultReleaseBranch: 'main',
-  jsiiVersion: '~5.0.0',
+  jsiiVersion: '^5.1.9',
   name: 'lambda-error-sns-sender',
   projenrcTs: true,
   repositoryUrl:

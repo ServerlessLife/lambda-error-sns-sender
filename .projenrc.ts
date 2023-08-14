@@ -60,6 +60,7 @@ const project = new awscdk.AwsCdkConstructLibrary({
 project.tsconfigDev.include.push('functions/**/*.ts', 'scripts/**/*.ts');
 project.package.addField('workspaces', ['functions', 'scripts']);
 project.gitignore.exclude('!functions/**/tsconfig.json');
+project.gitignore.exclude('!scripts/**/tsconfig.json');
 
 const esbuilTask = project.addTask('esbuild', {
   exec: `

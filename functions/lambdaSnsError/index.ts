@@ -18,8 +18,8 @@ const maxNumberOfLogs = process.env.MAX_NUMBER_OF_LOGS
 
 export const handler = async (event: SNSEvent, context: Context) => {
   try {
-    const records = event.Records.filter((r) =>
-      r.Sns.Subject?.startsWith('ALARM:')
+    const records = event.Records.filter(
+      (r) => r.Sns.Subject?.startsWith('ALARM:'),
     ).map((r) => ({
       message: JSON.parse(r.Sns.Message),
       topicArn: r.Sns.TopicArn,
@@ -39,7 +39,7 @@ export const handler = async (event: SNSEvent, context: Context) => {
           m.message.Trigger.Dimensions?.length === 1 &&
           m.message.Trigger.Dimensions[0]?.name === 'FunctionName' &&
           m.message.Trigger.Dimensions[0]?.value &&
-          m.topicArn
+          m.topicArn,
       )
       .map((m) => ({
         functionName: m.message.Trigger.Dimensions[0].value as string,
@@ -62,16 +62,16 @@ export const handler = async (event: SNSEvent, context: Context) => {
       }
 
       const periodTotal = metrics.find(
-        (m) => m.functionName === functionName
+        (m) => m.functionName === functionName,
       )!.periodTotal;
 
       const timestamp = metrics.find(
-        (m) => m.functionName === functionName
+        (m) => m.functionName === functionName,
       )!.timestamp;
 
       const logsFromDate = new Date(
         // 90 second safety margin
-        timestamp.getTime() - (periodTotal + 90) * 1000
+        timestamp.getTime() - (periodTotal + 90) * 1000,
       );
 
       const logGroupName = await getLogGroupName(functionName);
@@ -91,10 +91,10 @@ export const handler = async (event: SNSEvent, context: Context) => {
         });
 
         const cloudWatchCLogs = await cloudWatchLogsClient.send(
-          filterLogCommand
+          filterLogCommand,
         );
         logs.push(
-          ...(cloudWatchCLogs.events?.map((e) => `${e.message}`) ?? [])
+          ...(cloudWatchCLogs.events?.map((e) => `${e.message}`) ?? []),
         );
 
         if (logs.length >= maxNumberOfLogs) {
@@ -112,13 +112,12 @@ export const handler = async (event: SNSEvent, context: Context) => {
       stringBuffer = Buffer.from(
         stringBuffer.buffer,
         stringBuffer.byteOffset,
-        Math.min(stringBuffer.length, maxLength)
+        Math.min(stringBuffer.length, maxLength),
       );
 
       //get topicArn from metrics
-      const topicArn = metrics.find(
-        (m) => m.functionName === functionName
-      )?.topicArn;
+      const topicArn = metrics.find((m) => m.functionName === functionName)
+        ?.topicArn;
 
       if (!topicArn) {
         throw new Error('TopicArn not found');
@@ -141,7 +140,7 @@ export const handler = async (event: SNSEvent, context: Context) => {
 };
 
 async function getLogGroupName(
-  lambdaName: string
+  lambdaName: string,
 ): Promise<string | undefined> {
   return `/aws/lambda/${lambdaName}`;
 }

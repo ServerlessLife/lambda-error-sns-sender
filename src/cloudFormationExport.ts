@@ -67,7 +67,7 @@ export class CloudFormationExportStack extends Stack {
       }
     }
 
-    const snsErrorFunc = this.node.findChild(
+    const snsErrorFunc = lambdaErrorSnsSender.node.findChild(
       'lambdaSnsError',
     ) as lambda.Function;
 

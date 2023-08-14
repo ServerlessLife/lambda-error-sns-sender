@@ -13,7 +13,7 @@ import (
 	constructs "github.com/aws/constructs-go/constructs/v10/jsii"
 )
 
-//go:embed lambda-error-sns-sender-0.0.43.tgz
+//go:embed lambda-error-sns-sender-0.0.45.tgz
 var tarball []byte
 
 // Initialize loads the necessary packages in the @jsii/kernel to support the enclosing module.
@@ -24,5 +24,5 @@ func Initialize() {
 	constructs.Initialize()
 
 	// Load this library into the kernel
-	_jsii_.Load("lambda-error-sns-sender", "0.0.43", tarball)
+	_jsii_.Load("lambda-error-sns-sender", "0.0.45", tarball)
 }

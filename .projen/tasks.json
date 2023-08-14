@@ -142,7 +142,7 @@
       "name": "export-cf",
       "steps": [
         {
-          "exec": "\n        npx cdk synth lambda-error-sns-sender-cf --quiet\n        npx esr scripts/copyToS3.ts\n  "
+          "exec": "\n        npx cdk synth lambda-error-sns-sender-cf --quiet\n        npx esr scripts/copyToS3.ts --tsconfig scripts/tsconfig.json\n  "
         }
       ]
     },

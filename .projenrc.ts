@@ -79,7 +79,7 @@ project.addTask('export-cf', {
     {
       exec: `
         npx cdk synth lambda-error-sns-sender-cf --quiet
-        npx esr scripts/copyToS3.ts
+        npx esr scripts/copyToS3.ts --tsconfig scripts/tsconfig.json
   `,
     },
   ],

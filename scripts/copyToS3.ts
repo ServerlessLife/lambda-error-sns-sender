@@ -167,4 +167,4 @@ async function zipFolder(
   });
 }
 
-run().catch(console.error);
+void run();

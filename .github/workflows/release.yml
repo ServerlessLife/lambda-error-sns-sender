@@ -63,6 +63,8 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 16.x
+      - name: Generate files with projen
+        run: npx projen
       - name: Export CF
         run: npx projen export-cf
   release_github:

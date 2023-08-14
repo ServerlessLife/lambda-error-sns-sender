@@ -95,6 +95,14 @@ type LambdaErrorSnsSenderProps struct {
 	// Default: - Derived from construct path.
 	//
 	StackName *string `field:"optional" json:"stackName" yaml:"stackName"`
+	// Enable this flag to suppress indentation in generated CloudFormation templates.
+	//
+	// If not specified, the value of the `@aws-cdk/core:suppressTemplateIndentation`
+	// context key will be used. If that is not specified, then the
+	// default value `false` will be used.
+	// Default: - the value of `@aws-cdk/core:suppressTemplateIndentation`, or `false` if that is not set.
+	//
+	SuppressTemplateIndentation *bool `field:"optional" json:"suppressTemplateIndentation" yaml:"suppressTemplateIndentation"`
 	// Synthesis method to use while deploying this stack.
 	//
 	// The Stack Synthesizer controls aspects of synthesis and deployment,

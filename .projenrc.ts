@@ -3,7 +3,7 @@ import { NodePackageManager } from 'projen/lib/javascript';
 const project = new awscdk.AwsCdkConstructLibrary({
   author: 'Marko (ServerlessLife)',
   authorAddress: 'marko@serverlesslife.com',
-  cdkVersion: '2.91.0',
+  cdkVersion: '2.70.0',
   defaultReleaseBranch: 'main',
   jsiiVersion: '~5.0.0',
   name: 'lambda-error-sns-sender',

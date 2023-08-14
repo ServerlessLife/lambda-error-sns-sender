@@ -31,7 +31,7 @@ const s3Client = new S3Client({ region });
 
 async function run() {
   const jsonFile = fs.readFileSync(
-    'cdk.out/lambda-error-sns-sender-cf.assets.json',
+    '../cdk.out/lambda-error-sns-sender-cf.assets.json',
     'utf-8',
   );
   const assets: Assets = JSON.parse(jsonFile);
@@ -45,7 +45,7 @@ async function run() {
     const objectKey = destination.objectKey;
     const sourcePath = file.source.path;
 
-    const fullPath = path.join('cdk.out', sourcePath);
+    const fullPath = path.join('../cdk.out', sourcePath);
 
     if (packaging === 'zip') {
       // zip folder with library
@@ -110,7 +110,7 @@ async function uploadZipToS3(fullPath: string, objectKey: string) {
           return;
         }
         try {
-          await zipFolder(fullPath, zipFilePath);
+          await zipFolder(path.join('..', fullPath), zipFilePath);
           await uploadFileToS3(zipFilePath, objectKey);
           cleanupCallback();
           resolve(undefined);

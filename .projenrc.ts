@@ -56,7 +56,7 @@ const project = new awscdk.AwsCdkConstructLibrary({
   publishToGo: {
     moduleName: 'github.com/ServerlessLife/lambda-error-sns-sender',
   },
-  //majorVersion: 1,
+  majorVersion: 1,
 });
 
 project.tsconfigDev.include.push('functions/**/*.ts', 'scripts/**/*.ts');

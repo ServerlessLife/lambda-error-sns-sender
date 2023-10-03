@@ -1,10 +1,4 @@
-import {
-  App,
-  Stack,
-  StackProps,
-  CfnParameter,
-  DefaultStackSynthesizer,
-} from 'aws-cdk-lib';
+import { Stack, StackProps, CfnParameter } from 'aws-cdk-lib';
 import * as cdk from 'aws-cdk-lib';
 import * as iam from 'aws-cdk-lib/aws-iam';
 import * as lambda from 'aws-cdk-lib/aws-lambda';
@@ -124,16 +118,6 @@ export class CloudFormationExportStack extends Stack {
     setNodeNames(this.node.children);
   }
 }
-
-const app = new App();
-
-new CloudFormationExportStack(app, 'lambda-error-sns-sender-cf', {
-  synthesizer: new DefaultStackSynthesizer({
-    generateBootstrapVersionRule: false,
-  }),
-});
-
-app.synth();
 
 function setNodeNames(constructs: IConstruct[], parentName?: string) {
   let i = 0;

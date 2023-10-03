@@ -137,7 +137,6 @@ async function uploadToS3(body: fs.ReadStream | string, objectKey: string) {
     Bucket: bucketName,
     Key: objectKey,
     Body: body,
-    //ACL: 'public-read',
   };
 
   await s3Client.send(new PutObjectCommand(params));

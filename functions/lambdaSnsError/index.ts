@@ -104,7 +104,6 @@ export const handler = async (event: SNSEvent, context: Context) => {
         nextToken = cloudWatchCLogs.nextToken;
       } while (nextToken);
 
-      //const joinedLogs = `LAMBDA ${functionName} ERRORS:\n\n${logs.join('\n')}`;
       const joinedLogs = logs.join('\n');
 
       let stringBuffer = Buffer.from(joinedLogs, 'utf-8');

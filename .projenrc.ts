@@ -129,7 +129,6 @@ project.addTask('export-cf', {
       run: 'npx projen export-cf',
     },
   ],
-}),
-  console.log();
+});
 
 project.synth();
